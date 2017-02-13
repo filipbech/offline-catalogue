@@ -47,7 +47,7 @@ export class OfflineService {
 	download() {
 		this.productsService.download()
 			.subscribe(_=> {
-				alert('data is now cached for offline (only viewed images)');
+				alert('data is now cached for offline');
 				this.downloaded = true;
 			});
 	}

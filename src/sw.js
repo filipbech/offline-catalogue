@@ -24,6 +24,23 @@ self.addEventListener('activate',  event => {
 });
 
 
+self.addEventListener('message', (event) => {
+	//Later: add other handlers for other messages
+	const handler = handleDownloadMessage(event.data.list);
+
+	handler
+		.then(() => {
+			event.ports[0].postMessage({
+				error: null,
+				urls: 'Images downloaded'
+			});
+		}).catch(err => {
+			event.ports[0].postMessage({
+				error: err
+			});
+		});
+});
+
 self.addEventListener('fetch', event => {
 	const url = new URL(event.request.url);
 
@@ -58,4 +75,15 @@ self.addEventListener('fetch', event => {
 	);
 
 });
+
+
+
+
+function handleDownloadMessage(items) {
+	return caches.open(CACHENAME).then(cache => {
+		return cache.addAll(items);
+	});
+}
+
+
 

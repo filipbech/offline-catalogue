@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { OfflineComponent } from './offline.component';
 
 import { OfflineService } from './offline.service';
+import { ServiceWorkerService } from './serviceworker.service';
+
 
 @NgModule({
   declarations: [
@@ -16,7 +18,8 @@ import { OfflineService } from './offline.service';
   	RouterModule
   ],
   providers: [
-    OfflineService
+    OfflineService,
+    ServiceWorkerService
   ],
   exports: [
     OfflineComponent

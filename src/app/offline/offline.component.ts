@@ -6,7 +6,7 @@ import { OfflineService } from './offline.service';
   selector: 'offline',
   template: `
 	Status (online/offline): {{(isOnline | async) ? 'online' : 'offline' }} - 
-	<span *ngIf="downloaded | async">downloaded - <button (click)="clearDownload();">clear</button></span>
+	<span *ngIf="downloaded | async">downloaded</span>
 	<button *ngIf="!(downloaded | async) && isOnline" (click)="initiateDownload()">Download</button>
   `
 })
@@ -20,11 +20,6 @@ export class OfflineComponent {
 	}
 	clearDownload() {
 		this.offlineService.clear();
-	}
-
-	ngOnInit() {
-
-
 	}
 
 	constructor(private offlineService: OfflineService) { }

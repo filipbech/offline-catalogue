@@ -3,6 +3,7 @@ import { Http } from '@angular/http';
 import { Observable } from 'rxjs';
 
 import { OfflineService } from '../offline/offline.service';
+import { ServiceWorkerService } from '../offline/serviceworker.service';
 
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/forkJoin';
@@ -57,9 +58,23 @@ export class ProductsService {
 	}
 
 	public download() {
+
 		return Observable.forkJoin(...this._categories.map(cat => {
-			return this.getProductsByCategory(cat.url)
-		}));
+				return this.getProductsByCategory(cat.url)
+			}))
+			.do((categories) => {
+				const list = (categories as any).reduce((acc, category) => { 
+					category.forEach(product => { 
+						acc.push('/assets/' + product.id + '.jpg');
+					}); 
+					return acc;
+				}, []);
+				this.serviceWorkerService.postMessage({ message:'download', list })
+					.then(res => {
+						alert('images cached');
+					})
+			});
+
 	}
 	public clear() {
 		this._categoryProducts = {};
@@ -78,7 +93,8 @@ export class ProductsService {
 	}
 
 	constructor(private http: Http,
-				private offlineService: OfflineService) {
+				private offlineService: OfflineService,
+				private serviceWorkerService: ServiceWorkerService) {
 
 		this._categoryProducts = JSON.parse(localStorage.getItem('categoryProducts')) || {};
 
