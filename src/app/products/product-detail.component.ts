@@ -8,7 +8,7 @@ import { IProduct } from './products.service';
   selector: 'product-detail',
   template: `
 	<h1>{{product?.title}}</h1>
-	<img [src]="product?.img" alt="" style="width:100px; height:100px; margin-right:10px; float:left;" [alt]="'image for ' + product?.title"/>
+	<img [src]="'assets/'+product.id+'.jpg'" alt="" style="width:100px; height:100px; margin-right:10px; float:left;" [alt]="'image for ' + product?.title"/>
 	<p>{{product?.desc}}</p>
 	<p>{{product?.price}}</p>
 	<button (click)="buy();">Buy</button><br/><br/>
