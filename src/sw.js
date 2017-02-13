@@ -1,16 +1,21 @@
-const CACHENAME = 'v1'
+const CACHENAMES = {
+	JS: 'v2',
+	IMAGES: 'images-v1'
+};
 
 self.addEventListener('install', event => {
 	event.waitUntil(
-		caches.open(CACHENAME)
+		caches.open(CACHENAMES.JS)
 			.then(cache => {
 				return cache.addAll([
 					'/',
+
 					'/inline.bundle.js',
 					'/polyfills.bundle.js',
 					'/styles.bundle.js',
 					'/vendor.bundle.js',
 					'/main.bundle.js',
+
 					'/assets/noimage.jpg'
 				])
 				.then(() => self.skipWaiting());
@@ -18,11 +23,18 @@ self.addEventListener('install', event => {
 	);
 });	
 
-
 self.addEventListener('activate',  event => {
-	event.waitUntil(self.clients.claim());
+	event.waitUntil(Promise.all([self.clients.claim(),
+		caches.keys().then(keyList => {
+			return Promise.all(keyList.map(function(key) {
+				if (Object.values(CACHENAMES).indexOf(key) == -1) {
+					return caches.delete(key);
+				}
+				return true;
+			}));
+		})
+	]));
 });
-
 
 self.addEventListener('message', (event) => {
 	//Later: add other handlers for other messages
@@ -50,7 +62,7 @@ self.addEventListener('fetch', event => {
 			caches.match(event.request)
 				.then(function(response) {
 					return response || fetch(event.request).then(response => {
-						return caches.open(CACHENAME).then(cache => {
+						return caches.open(CACHENAMES.JS).then(cache => {
 							cache.put(event.request, response.clone());
 							return response;
 						});
@@ -63,7 +75,7 @@ self.addEventListener('fetch', event => {
 		return;
 	}
 
-	// handling spa-urls (always serving '/');
+	// handling spa-urls that hasn't been cached (always serving '/');
 	if(url.pathname.indexOf('/products/') > -1 || url.pathname.indexOf('/category/') > -1) {
 		event.respondWith(caches.match('/'));
 		return;
@@ -76,14 +88,8 @@ self.addEventListener('fetch', event => {
 
 });
 
-
-
-
 function handleDownloadMessage(items) {
-	return caches.open(CACHENAME).then(cache => {
+	return caches.open(CACHENAMES.IMAGES).then(cache => {
 		return cache.addAll(items);
 	});
 }
-
-
-
