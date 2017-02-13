@@ -4,6 +4,8 @@ import { ProductsService } from './products.service';
 
 import { IProduct } from './products.service';
 
+import { BasketService } from '../commerce/basket.service';
+
 @Component({
   selector: 'product-detail',
   template: `
@@ -20,7 +22,7 @@ export class ProductDetailComponent {
 	product:IProduct;
 
 	buy() {
-		alert('currently does nothing');
+		this.basketService.addToBasket(this.product);
 	}
 
 	ngOnInit() {
@@ -38,6 +40,7 @@ export class ProductDetailComponent {
 	}
 
 	constructor(private activatedRoute: ActivatedRoute,
-				private productsService: ProductsService
+				private productsService: ProductsService,
+				private basketService: BasketService
 	) { }
 }

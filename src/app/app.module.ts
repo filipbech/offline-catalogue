@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 
 import { ProductsModule } from './products/products.module';
 import { OfflineModule } from './offline/offline.module';
+import { CommerceModule } from './commerce/commerce.module';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { OfflineModule } from './offline/offline.module';
     routing,
 
     ProductsModule,
-    OfflineModule
+    OfflineModule,
+    CommerceModule
   ],
   providers: [],
   bootstrap: [AppComponent]

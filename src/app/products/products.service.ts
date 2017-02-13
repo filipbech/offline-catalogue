@@ -12,7 +12,6 @@ export interface IProduct {
 	title:string;
 	price:string;
 	stock:boolean;
-	img:string;
 	id:number;
 	desc:string;
 }
