@@ -20,18 +20,18 @@ export interface IProduct {
 export class ProductsService {
 
 	private _categories = [
-		{url:'priskup', title:'Priskup', feed:'http://www.json-generator.com/api/json/get/caZonyRNFe'},
-		{url:'blomster', title:'Blomster', feed:'http://www.json-generator.com/api/json/get/cbbkqVOIMO'},
-		{url:'frugt-og-groent', title:'Frugt og grønt', feed:'http://www.json-generator.com/api/json/get/bUmPrizYde'},
-		{url:'koed-og-fisk', title:'Kød og fisk', feed:'http://www.json-generator.com/api/json/get/cppXzHXnci'},
-		{url:'koel', title:'Køl', feed:'http://www.json-generator.com/api/json/get/cfhBldjbJu'},
-		{url:'frost', title:'Frost', feed:'http://www.json-generator.com/api/json/get/bZPsUKBlki'},
-		{url:'kolonial', title:'Kolonial', feed:'http://www.json-generator.com/api/json/get/cpeXgneQZe'},
-		{url:'vin', title:'Vin', feed:'http://www.json-generator.com/api/json/get/bVvqEVQkoi'},
-		{url:'drikkevarer', title:'Drikkevarer', feed:'http://www.json-generator.com/api/json/get/cqaTnsuOZK'},
-		{url:'slik-og-snacks', title:'Slik og snaks', feed:'http://www.json-generator.com/api/json/get/bQDhLYfWxu'},
-		{url:'pleje', title:'Pleje', feed:'http://www.json-generator.com/api/json/get/bPGxTLHwgO'},
-		{url:'alt-til-hus-og-hjem', title:'Alt til hus og hjem', feed:'http://www.json-generator.com/api/json/get/cqyyNvnznm'}
+		{url:'priskup', title:'Priskup', feed:'/api/caZonyRNFe.json'},
+		{url:'blomster', title:'Blomster', feed:'/api/cbbkqVOIMO.json'},
+		{url:'frugt-og-groent', title:'Frugt og grønt', feed:'/api/bUmPrizYde.json'},
+		{url:'koed-og-fisk', title:'Kød og fisk', feed:'/api/cppXzHXnci.json'},
+		{url:'koel', title:'Køl', feed:'/api/cfhBldjbJu.json'},
+		{url:'frost', title:'Frost', feed:'/api/bZPsUKBlki.json'},
+		{url:'kolonial', title:'Kolonial', feed:'/api/cpeXgneQZe.json'},
+		{url:'vin', title:'Vin', feed:'/api/bVvqEVQkoi.json'},
+		{url:'drikkevarer', title:'Drikkevarer', feed:'/api/cqaTnsuOZK.json'},
+		{url:'slik-og-snacks', title:'Slik og snaks', feed:'/api/bQDhLYfWxu.json'},
+		{url:'pleje', title:'Pleje', feed:'/api/bPGxTLHwgO.json'},
+		{url:'alt-til-hus-og-hjem', title:'Alt til hus og hjem', feed:'/api/cqyyNvnznm.json'}
 	];
 
 	private _categoryProducts;
