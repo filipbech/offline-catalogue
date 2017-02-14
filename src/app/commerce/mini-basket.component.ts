@@ -4,14 +4,16 @@ import { BasketService } from './basket.service';
 
 @Component({
 	selector:'mini-basket',
-	template:`Kurv: <button (click)="send()">Send kurv ({{(basket | async).length}} produkter)</button>`
+	template:`<a [routerLink]="['basket']">Se kurv ({{basketCount}} produkter)</a>`
 })
 export class MiniBasketComponent {
 	
-	public basket = this.basketService.basketChange$;
+	public basketCount:number = 0;
 
-	public send() {
-		this.basketService.sendOrder();
+	ngOnInit(){
+		this.basketService.basketChange$.subscribe(basket => {
+			this.basketCount = basket.reduce((acc, product)=>{ return acc+product.count },0);
+		});
 	}
 
 	constructor(private basketService: BasketService) {}

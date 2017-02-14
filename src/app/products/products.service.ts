@@ -14,6 +14,7 @@ export interface IProduct {
 	stock:boolean;
 	id:number;
 	desc:string;
+	count?:number;
 }
 
 @Injectable()

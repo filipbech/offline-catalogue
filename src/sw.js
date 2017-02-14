@@ -36,6 +36,27 @@ self.addEventListener('activate',  event => {
 	]));
 });
 
+
+self.addEventListener('sync', function(event) {
+	console.log(event)
+	if (event.tag == 'sendOrder') {
+		const title = 'Order received';
+		const options = {
+			body: 'Your order was received'
+		};
+
+		event.waitUntil(fetch('/api/order.json')
+			.then(response => {
+				return self.registration.showNotification(title, options)
+			})
+			.catch(err => {
+				return Promise.reject('no internet');
+			})
+		);
+	}
+});
+
+
 self.addEventListener('message', (event) => {
 	//Later: add other handlers for other messages
 	const handler = handleDownloadMessage(event.data.list);
@@ -76,7 +97,7 @@ self.addEventListener('fetch', event => {
 	}
 
 	// handling spa-urls that hasn't been cached (always serving '/');
-	if(url.pathname.indexOf('/products/') > -1 || url.pathname.indexOf('/category/') > -1) {
+	if(url.pathname.indexOf('/products/') > -1 || url.pathname.indexOf('/category/') > -1 || url.pathname.indexOf('/basket') > -1) {
 		event.respondWith(caches.match('/'));
 		return;
 	}

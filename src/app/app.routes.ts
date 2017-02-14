@@ -5,6 +5,8 @@ import { ProductListComponent } from './products/product-list.component';
 import { ProductDetailComponent } from './products/product-detail.component';
 import { CategoryListComponent } from './products/category-list.component';
 
+import { BasketComponent } from './commerce/basket.component';
+
 
 const appRoutes: Routes = [
   {
@@ -18,6 +20,10 @@ const appRoutes: Routes = [
   {
     path: 'category/:product',
     component: ProductListComponent
+  },
+  {
+    path: 'basket',
+    component: BasketComponent
   },
 ];
 
