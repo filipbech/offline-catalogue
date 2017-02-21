@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 import { OfflineService } from '../offline/offline.service';
 import { ServiceWorkerService } from '../offline/serviceworker.service';
 
+import * as localForage from 'localforage';
+
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/forkJoin';
 
@@ -35,7 +37,7 @@ export class ProductsService {
 		{url:'alt-til-hus-og-hjem', title:'Alt til hus og hjem', feed:'/api/cqyyNvnznm.json'}
 	];
 
-	private _categoryProducts;
+	private _categoryProducts = {};
 
 	public getCategories() {
 		return this._categories;
@@ -49,7 +51,7 @@ export class ProductsService {
 			.map(res=>res.json())
 			.do(feed => {
 				this._categoryProducts[url] = feed;
-				localStorage.setItem('categoryProducts', JSON.stringify(this._categoryProducts))
+				return localForage.setItem('categoryProducts', this._categoryProducts);
 			})
 			.catch(err => {
 				console.log('error in getter',err);
@@ -78,10 +80,21 @@ export class ProductsService {
 	}
 	public clear() {
 		this._categoryProducts = {};
-		localStorage.removeItem('categoryProducts');
+		return localForage.removeItem('categoryProducts');
 	}
 
-	public getProductById(id):IProduct {
+	public getProductById(id):Observable<IProduct> {
+		if(Object.keys(this._categoryProducts).length>0) {
+			return Observable.of(this.findProductById(id));
+		} else {
+			// timeout 200 is a random timeout for making sure that idb is ready
+			return Observable.timer(200).switchMap(_ => { 
+				return Observable.of(this.findProductById(id))
+			});
+		}
+	}
+
+	private findProductById(id):IProduct {
 		for (let key in this._categoryProducts) {
 			for (let prod of this._categoryProducts[key]) {
 				if(prod.id == id) {
@@ -92,15 +105,20 @@ export class ProductsService {
 		return null;
 	}
 
+
 	constructor(private http: Http,
 				private offlineService: OfflineService,
 				private serviceWorkerService: ServiceWorkerService) {
 
-		this._categoryProducts = JSON.parse(localStorage.getItem('categoryProducts')) || {};
-
-		if(Object.keys(this._categoryProducts).length === this._categories.length) { 
-			this.offlineService.setDownloaded(true);
-		}
+		localForage.getItem('categoryProducts').then((categoryProducts:any) => {
+			if(!categoryProducts) { categoryProducts = {}; }
+			this._categoryProducts = categoryProducts;
+			return categoryProducts;
+		}).then(categoryProducts => {
+			if(Object.keys(this._categoryProducts).length === this._categories.length) { 
+				this.offlineService.setDownloaded(true);
+			}
+		});
 
 	}
 }

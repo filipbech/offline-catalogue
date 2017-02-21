@@ -9,17 +9,21 @@ import { BasketService } from '../commerce/basket.service';
 @Component({
   selector: 'product-detail',
   template: `
+  <div *ngIf="product">
 	<h1>{{product?.title}}</h1>
-	<img [src]="'assets/'+product.id+'.jpg'" alt="" style="width:100px; height:100px; margin-right:10px; float:left;" [alt]="'image for ' + product?.title"/>
+	<img [src]="'assets/'+product?.id+'.jpg'" alt="" style="width:100px; height:100px; margin-right:10px; float:left;" [alt]="'image for ' + product?.title"/>
 	<p>{{product?.desc}}</p>
 	<p>{{product?.price}}</p>
 	<button (click)="buy();">Buy</button><br/><br/>
 	<a [routerLink]="['']">back</a>
+  </div>
+  <div *ngIf="error">{{error}}</div>
   `
 })
 export class ProductDetailComponent {
 
 	product:IProduct;
+	error:string;
 
 	buy() {
 		this.basketService.addToBasket(this.product);
@@ -28,12 +32,12 @@ export class ProductDetailComponent {
 	ngOnInit() {
 		this.activatedRoute.params
 			.map(params => params['id'])
-			.map(id => this.productsService.getProductById(id))
+			.switchMap(id => this.productsService.getProductById(id))
 			.subscribe(product => {
 				if(product) {
 					this.product = product;
 				} else {
-					alert('product is not available! did you remember to download?');
+					this.error = "Product is not available (not downloaded)";
 				}
 			})
 			

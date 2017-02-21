@@ -1,3 +1,5 @@
+importScripts("/localforage.min.js");
+
 const CACHENAMES = {
 	JS: 'v2',
 	IMAGES: 'images-v1'
@@ -16,7 +18,8 @@ self.addEventListener('install', event => {
 					'/vendor.bundle.js',
 					'/main.bundle.js',
 
-					'/assets/noimage.jpg'
+					'/assets/noimage.jpg',
+					'/localforage.min.js'
 				])
 				.then(() => self.skipWaiting());
 			})
@@ -38,16 +41,20 @@ self.addEventListener('activate',  event => {
 
 
 self.addEventListener('sync', function(event) {
-	console.log(event)
 	if (event.tag == 'sendOrder') {
-		const title = 'Order received';
-		const options = {
-			body: 'Your order was received'
-		};
 
 		event.waitUntil(fetch('/api/order.json')
 			.then(response => {
-				return self.registration.showNotification(title, options)
+				return response.json();
+			})
+			.then(data => {
+				return localforage.getItem('order');
+			})
+			.then(order => {
+				const number = order.reduce((acc,pro)=>{return acc+pro.count},0);
+				return self.registration.showNotification('Order sent', {
+					body: `Your order of ${number} goods was received`
+				});
 			})
 			.catch(err => {
 				return Promise.reject('no internet');
