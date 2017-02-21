@@ -12,7 +12,7 @@
         "api",
         "favicon.ico",
         "sw.js",
-        "localforage.min.js",
+        "localforage.min.js"
       ],
       "index": "index.html",
       "main": "main.ts",
