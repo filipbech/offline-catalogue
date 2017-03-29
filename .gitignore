@@ -3,6 +3,7 @@
 # compiled output
 /dist
 /tmp
+/catalogue-*
 
 # dependencies
 /node_modules

@@ -2,17 +2,18 @@ import { Injectable } from '@angular/core';
 
 export class ServiceWorkerService {
 
-	public isSupported = 'serviceWorker' in navigator;
+	public isSupported = 'serviceWorker' in navigator && !('require' in window);
 
 	public requestSync(syncName) {
 		if(!this.isSupported) {
-			throw new ReferenceError('ServiceWorker is not supported in this browser');
+			alert('We need to handle the push-messages in a different way with electron (how do we send basket when offline?)');
+			return;
 		}
 
 		(window as any).Notification.requestPermission(function(result) {
 			if(result !== 'granted') {
 				alert('instead of a notification you will get an email (you won\'t)');
-				return
+				return;
 			}
 
 			(navigator as any).serviceWorker.ready.then(function(swRegistration) {
@@ -25,11 +26,12 @@ export class ServiceWorkerService {
 
 	public postMessage(message) {
 
-		if(!this.isSupported) {
-			throw new ReferenceError('ServiceWorker is not supported in this browser');
-		}
-
 		return new Promise(function(resolve, reject) {
+
+			if(!this.isSupported) {
+				reject('ServiceWorker is not supported in this browser');
+			}
+
 			var messageChannel = new MessageChannel();
 			messageChannel.port1.onmessage = function(event) {
 				if (event.data.error) {

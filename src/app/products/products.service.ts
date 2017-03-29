@@ -22,6 +22,8 @@ export interface IProduct {
 @Injectable()
 export class ProductsService {
 
+	private url = 'https://catalog-176f5.firebaseapp.com';
+
 	private _categories = [
 		{url:'priskup', title:'Priskup', feed:'/api/caZonyRNFe.json'},
 		{url:'blomster', title:'Blomster', feed:'/api/cbbkqVOIMO.json'},
@@ -47,7 +49,7 @@ export class ProductsService {
 		if(this._categoryProducts[url]) {
 			return Observable.of(this._categoryProducts[url]);
 		}
-		return this.http.get(this._categories.find(cat => cat.url == url).feed)
+		return this.http.get(this.url+this._categories.find(cat => cat.url == url).feed)
 			.map(res=>res.json())
 			.do(feed => {
 				this._categoryProducts[url] = feed;
